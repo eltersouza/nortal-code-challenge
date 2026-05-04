@@ -1,10 +1,10 @@
 # Conway's Game of Life API
 
-API em C# com .NET 9 para o code challenge da Nortal. O projeto expõe endpoints para:
-- criar um tabuleiro e retornar seu ID;
-- calcular a próxima geração;
-- calcular o estado após `N` gerações;
-- encontrar o estado final estável ou retornar erro quando o limite de tentativas é excedido.
+C# and .NET 9 API built for the Nortal code challenge. The project exposes endpoints to:
+- create a board and return its ID;
+- calculate the next generation;
+- calculate the board state after `N` generations;
+- find the final stable state or return an error when the attempt limit is exceeded.
 
 ## Stack
 
@@ -14,54 +14,54 @@ API em C# com .NET 9 para o code challenge da Nortal. O projeto expõe endpoints
 - xUnit + FluentAssertions + Moq
 - Docker
 
-## Como está organizado
+## Project Structure
 
-- `src/GameOfLife.Api/Controllers`: endpoints HTTP
-- `src/GameOfLife.Api/Services`: regras de aplicação
-- `src/GameOfLife.Api/Domain`: motor do jogo e modelos
-- `src/GameOfLife.Api/Infrastructure`: persistência e mapeamento EF Core
-- `tests`: testes unitários e de integração
+- `src/GameOfLife.Api/Controllers`: HTTP endpoints
+- `src/GameOfLife.Api/Services`: application logic
+- `src/GameOfLife.Api/Domain`: game engine and domain models
+- `src/GameOfLife.Api/Infrastructure`: persistence and EF Core mapping
+- `tests`: unit and integration tests
 
-## Persistência
+## Persistence
 
-Os boards são persistidos em SQLite. Isso permite que a aplicação reinicie ou caia sem perder os estados já enviados.
+Boards are persisted in SQLite so the application can restart or crash without losing previously uploaded board states.
 
 - Local: `src/GameOfLife.Api/gameoflife.db`
 - Docker: `/app/data/gameoflife.db`
 
-## Executando localmente
+## Run Locally
 
-Pré-requisito: .NET 9 SDK
+Prerequisite: .NET 9 SDK
 
 ```bash
 dotnet restore
 dotnet run --project src/GameOfLife.Api
 ```
 
-Em desenvolvimento, a API sobe com Swagger habilitado. Pelas configurações atuais de `launchSettings.json`, a URL HTTP padrão é `http://localhost:5208`.
+In development, Swagger is enabled. Based on the current `launchSettings.json`, the default HTTP URL is `http://localhost:5208`.
 
-## Executando com Docker
+## Run with Docker
 
 ```bash
 docker compose up --build
 ```
 
-A API fica disponível em `http://localhost:8080`.
+The API is available at `http://localhost:8080`.
 
-## Testes
+## Tests
 
 ```bash
 dotnet test GameOfLife.sln
 ```
 
-Ou separadamente:
+Or individually:
 
 ```bash
 dotnet test tests/GameOfLife.UnitTests/GameOfLife.UnitTests.csproj
 dotnet test tests/GameOfLife.IntegrationTests/GameOfLife.IntegrationTests.csproj
 ```
 
-## Endpoints principais
+## Main Endpoints
 
 - `POST /api/boards`
 - `GET /api/boards/{id}`
@@ -70,9 +70,9 @@ dotnet test tests/GameOfLife.IntegrationTests/GameOfLife.IntegrationTests.csproj
 - `GET /api/boards/{id}/final?maxGenerations=1000`
 - `GET /health`
 
-## Assunções
+## Assumptions
 
-- O board é imutável após a criação.
-- As bordas são tratadas como células mortas.
-- Os estados futuros são recalculados sob demanda a partir do estado inicial persistido.
-- O estado final considera tanto padrões estáveis quanto ciclos detectados por repetição de hash.
+- The board is immutable after creation.
+- Board edges are treated as dead cells.
+- Future states are recalculated on demand from the persisted initial state.
+- The final state check considers both stable patterns and cycles detected through repeated hashes.
